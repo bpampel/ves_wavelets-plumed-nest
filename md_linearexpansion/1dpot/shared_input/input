@@ -1,0 +1,19 @@
+nstep             20000000
+tstep             0.005
+temperature       0.5
+friction          10.0
+random_seed 93013527
+plumed_input      plumed.dat
+dimension         1
+replicas          1
+basis_functions_1 BF_POWERS ORDER=4 MINIMUM=-3.0 MAXIMUM=+3.0
+input_coeffs       pot_coeffs_input.data
+initial_position   -1.45609
+output_potential        potential.data
+output_potential_grid   300
+output_histogram        histogram.data
+
+# 1d potential similar to wolff-quappe
+# U(x,y) = x**4 - 4.0*x**2 + 0.7*x
+# Minima around -1.45609 and +1.36825
+# Maxima around 0.0
