@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # set all variables
-basedir=1dpot
+basedir=1d-double_well
 shared_input_dir=shared_input
 num_iter=20
 simulation_exe='plumed ves_md_linearexpansion'

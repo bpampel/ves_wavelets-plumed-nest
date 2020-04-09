@@ -21,4 +21,6 @@ for i in $(seq 1 $num_iter); do
   sed -i 's/random_seed.*/random_seed\ '"$seed"'/' "$ves_md_input"
   $exe input > logfile
   cd ../
+  percentage=$((100 * $i / $num_iter))
+  echo -ne "${percentage}% done.\r"
 done
