@@ -1,0 +1,4 @@
+# vim:ft=plumed
+INCLUDE FILE=plumed-common.dat
+
+PRINT ARG=* STRIDE=100 FILE=COLVAR

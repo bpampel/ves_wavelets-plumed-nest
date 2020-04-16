@@ -1,0 +1,21 @@
+tolerance 2.0
+output CaCO3.pdb
+filetype pdb
+structure water.pdb
+  number 2448
+  inside cube 0. 0. 0. 42.0
+  chain H
+  resnumbers 3
+end structure
+structure Ca.pdb
+  number 1
+  inside cube 10. 10. 10. 10
+  chain A
+  resnumbers 3
+end structure
+structure CO3.pdb
+  number 1
+  inside cube 20. 20. 20. 10
+  chain B
+  resnumbers 3
+end structure

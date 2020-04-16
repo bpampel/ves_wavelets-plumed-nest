@@ -1,0 +1,48 @@
+echo log
+
+# Define temperature parameters
+variable        temperature equal 300.0 # Simulation temperature in Kelvin
+variable        tempDamp equal 0.1 # Relaxation time of themostat - 0.1 ps
+
+# Define pressure parameters
+variable        pressure equal 1.0 # Pressure in bars
+variable        pressureDamp equal 1.0 # Relaxation time of the barostat - 1 ps
+
+# Define random seeds for all walkers
+variable        seed world 17737212 83934746 31307671 27041104 37202363 68514785 54520313 30594900 95212034 20950687 14998629 25662921 70353406 22648910 24642129 16067661 11866499 77704369 71942362 19279362 61418597 66379727 26422020 38422957 38569255 16345612 641356 351355 675146
+
+# Simulation setup
+units           metal
+atom_style      full
+variable        out_freq equal 100 # Thermo output frequency
+variable        out_freq2 equal 1000 # Dump output frequency
+neigh_modify    delay 0 every 1 check yes # Neighbor list setup
+include         in.CaCO3 # Load initial configuration and force parameters
+timestep        0.001 # Timestep 1 fs
+thermo          ${out_freq}
+thermo_style    custom step temp pe ke etotal press density lx ly lz
+restart         100000 restart restart2
+
+# Perform minimization
+minimize        1.0e-3 1.0e-4 10000 1000
+
+# Write trajectory to file
+dump            myDump all dcd ${out_freq2} out.dcd
+dump_modify     myDump unwrap yes
+
+reset_timestep  0
+
+
+fix 1           all plumed plumedfile plumed.dat outfile plumed.out
+fix 2           all nvt temp ${temperature} ${temperature} ${tempDamp} tchain 5
+
+velocity        all create ${temperature} ${seed} dist gaussian
+
+run             3000000 # 3 ns
+
+unfix 1
+unfix 2
+
+# Write final configuration
+write_data      data.final
+

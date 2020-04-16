@@ -1,0 +1,42 @@
+# vim:ft=plumed
+UNITS LENGTH=A ENERGY=eV TIME=ps
+
+# CVs
+dist:  DISTANCE ATOMS=7345,7346
+
+COORDINATION ...
+  LABEL=coord
+  GROUPA=7345
+  GROUPB=2-7343:3
+  SWITCH={RATIONAL R_0=1.0 D_0=2.1 NN=4 MM=8}
+  NLIST
+  NL_CUTOFF=10
+  NL_STRIDE=10
+... COORDINATION
+
+
+# metad with multiple walkers
+METAD ...
+  LABEL=metad
+  ARG=dist,coord
+  SIGMA=0.2,0.1
+  HEIGHT=0.025852
+  BIASFACTOR=5
+  TEMP=300
+  PACE=1000
+  GRID_MIN=2,3
+  GRID_MAX=13,10
+  CALC_RCT
+  WALKERS_MPI
+... METAD
+
+# walls to stay close to associated state
+UPPER_WALLS ...
+  ARG=dist
+  AT=12
+  KAPPA=12.0
+  EXP=2
+  EPS=1
+  OFFSET=0.
+  LABEL=wall
+... UPPER_WALLS

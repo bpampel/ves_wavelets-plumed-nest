@@ -1,0 +1,136 @@
+## load configuration
+read_data       data.CaCO3
+
+# forcefield from Raiteri, Demichelis, Gale
+#######################################################
+#### Forcefield Parameters in LAMMPS format
+#######################################################
+#@ 8 atom types
+
+variable O2 equal 4 # water
+variable H2 equal 3 #
+variable C4 equal 1 # carbonate
+variable O4 equal 5 #
+#variable Mg equal 6 # magnesium
+variable Ca equal 2 # calcium
+#variable Sr equal 7 # strontium
+#variable Ba equal 8 # barium
+
+#######################################################
+#### Atoms' masses
+#######################################################
+
+mass    ${O2}       16.000
+mass    ${H2}        1.010
+mass    ${C4}       12.010
+mass    ${O4}       16.000
+#mass    ${Mg}       24.310
+mass    ${Ca}       40.080
+#mass    ${Sr}       87.620
+#mass    ${Ba}      137.330
+
+#######################################################
+#### Atoms' charges
+#######################################################
+
+set   type   ${O2}     charge        -0.820000
+set   type   ${H2}     charge         0.410000
+set   type   ${C4}     charge         1.123285
+set   type   ${O4}     charge        -1.041095
+#set   type   ${Mg}     charge         2.000000
+set   type   ${Ca}     charge         2.000000
+#set   type   ${Sr}     charge         2.000000
+#set   type   ${Ba}     charge         2.000000
+
+#######################################################
+#### Covalent bonds parameters
+#######################################################
+#@ 2 bond types
+
+bond_style        harmonic
+#@ O2 - H2
+bond_coeff         2   22.965000            1.0120000
+#@ C4 - O4
+bond_coeff         1   20.424650            1.3042000
+
+#######################################################
+#### Covalent angles parameters
+#######################################################
+#@ 2 angle types
+
+angle_style hybrid class2              harmonic
+#@ H2 - O2 - H2
+angle_coeff   1  harmonic                  1.6456800       113.24000
+#@ O4 - C4 - O4
+angle_coeff   2  class2                    120.00000       6.6170000   0.0000000   0.0000000
+angle_coeff   2  class2 bb                 12.818000       1.3042000   1.3042000
+angle_coeff   2  class2 ba                 1.5331900       1.5331900   1.3042000   1.3042000
+
+#######################################################
+#### Covalent dihedrals parameters
+#######################################################
+#@ 1 dihedral types
+
+#dihedral_style charmm
+#@ H6-O6-C5-O5
+#dihedral_coeff   1                   0.10600000    2 180    0.00000
+
+#######################################################
+#### Covalent improper dihedrals parameters
+#######################################################
+#@ 3    improper types
+improper_style distance
+#@ C4-O4-O4-O4
+improper_coeff   1      13.647000                 360.00000
+
+#######################################################
+# Pair potentials
+# Pair styles lj/gulp and buck/gulp are in house modifications to include a taper.
+# The form of the MDF (Mei-Davenport-Fernando) taper is:
+# E_smooth(r) = E(r)*f_cut(r)
+# where f_cut(r) = 1.0 for r < r_min and = 0 for r >= rmax.
+# In between it takes the value f_cut(r) = ((1 - x)**3)*(1+3x+6x**2), where
+# x = (r-r_min)/(rmax-r_min). Here r_min is the start of the taper range.
+#
+# Routines for LAMMPS can be provided upon request to the Authors
+#
+#######################################################
+
+variable rmin  equal 6.
+variable rmax  equal 9.
+variable rcoul equal 9.
+
+pair_style  hybrid/overlay  coul/long  ${rcoul}  lj/cut  ${rmax}  lj/mdf ${rmin}  ${rmax} buck/mdf ${rmin} ${rmax}
+
+pair_coeff       *       *             coul/long
+
+#######################################################
+# Water - water interactions
+
+pair_coeff     ${O2}   ${O2}               lj/cut      0.00674           3.165492
+pair_modify tail yes
+
+# Alkaline earths - water interactions
+#pair_coeff     ${O2}   ${Mg}              lj/mdf      0.001137          2.82
+pair_coeff      ${Ca}   ${O2}              lj/mdf      0.00095           3.35
+#pair_coeff     ${O2}   ${Sr}              lj/mdf      0.000776          3.65
+#pair_coeff     ${O2}   ${Ba}              lj/mdf      0.000657          3.965
+
+# Carbonate - water interactions
+pair_coeff     ${O2}   ${O4}             buck/mdf  12534.455133          0.202           0.
+pair_coeff     ${H2}   ${O4}             buck/mdf    340.                0.217           0.
+
+
+#######################################################
+# Alkaline earths - carbonate interactions
+#pair_coeff     ${O4}   ${Mg}            buck/mdf   3944.8613            0.238160        0.
+pair_coeff      ${Ca}   ${O4}            buck/mdf   3161.6335            0.271511        0.
+#pair_coeff     ${O4}   ${Sr}            buck/mdf  14250.269             0.244116        0.
+#pair_coeff     ${O4}   ${Ba}            buck/mdf  13478.151             0.258299        0.
+
+
+special_bonds lj 0.  0.  0.  coul 0.  0.  0.0
+
+# matching kspace style for coul/long
+kspace_style    pppm 1e-5
+
