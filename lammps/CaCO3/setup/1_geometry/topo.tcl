@@ -10,4 +10,4 @@ topo retypebonds
 topo guessangles
 # detect improper at O4-O4-C4-O4
 topo guessimpropers
-topo writelammpsdata ../data.CaCO3
+topo writelammpsdata data.CaCO3

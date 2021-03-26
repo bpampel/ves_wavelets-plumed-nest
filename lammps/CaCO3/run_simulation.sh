@@ -24,6 +24,6 @@ srun $exe -partition ${walkers}x32 -in start.lmp -screen none
 echo 'Simulation finished, moving files'
 
 # copy output files to userspace and clean up
-mv * $outdir/
+mv * $outdir/ | exit -1
 rmdir $tmpdir
 echo 'All finished'
