@@ -4,6 +4,7 @@ Calculates error of a FES calculation
 Averages pointwise over a set of FES and calculates the standart deviation.
 Compares the average values pointwise to a reference FES for the bias.
 Combination of both gives the total error.
+This metric was not used in the paper eventually.
 """
 
 import argparse
