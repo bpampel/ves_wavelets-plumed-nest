@@ -1,5 +1,5 @@
 ## load configuration
-read_data       data.CaCO3
+read_data       initial_configurations/run1/data.CaCO3.${pid}
 
 # forcefield from Raiteri, Demichelis, Gale
 #######################################################
