@@ -23,7 +23,7 @@ The files were run with the following codes:
 
 ## Folders
 
-### Simulations of artificial potentials simulated with the `ves_md_linearexpansion` tool of `plumed`
+### Simulations of artificial potentials with the `ves_md_linearexpansion` tool of `plumed`
 Each subdirectory contains a different potential that was simulated with 4 different VES basis sets.
 These contain a `shared_input` folder with the potential and simulation parameters, as well as custom `plumed.dat` files for each basis set.
 
